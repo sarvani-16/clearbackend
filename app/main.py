@@ -71,6 +71,10 @@ def _enrich_image_response(db_image: Image) -> schemas.ImageResponse:
 
 # API Endpoints
 
+@app.get("/")
+def read_root():
+    return {"status": "online", "message": "CloudClear AI API is running"}
+
 @app.post("/api/upload", response_model=schemas.ImageResponse, status_code=status.HTTP_201_CREATED)
 def upload_image(file: UploadFile = File(...), user_id: Optional[int] = None, db: Session = Depends(get_db)):
     """
