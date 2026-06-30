@@ -12,16 +12,24 @@ Base = declarative_base()
 
 # Attempt to initialize Database Engine
 try:
-    logger.info(f"Attempting to connect to PostgreSQL database: {settings.DATABASE_URL.split('@')[-1]}")
-    # Set a short timeout (e.g., 3 seconds) for initial connection check
-    engine = create_engine(
-        settings.DATABASE_URL, 
-        pool_pre_ping=True,
-        connect_args={"connect_timeout": 3}
-    )
-    # Test the connection
-    with engine.connect() as conn:
-        logger.info("Successfully connected to PostgreSQL database!")
+    if settings.DATABASE_URL.startswith("postgresql"):
+        logger.info(f"Attempting to connect to PostgreSQL database: {settings.DATABASE_URL.split('@')[-1]}")
+        # Set a short timeout (e.g., 3 seconds) for initial connection check
+        engine = create_engine(
+            settings.DATABASE_URL, 
+            pool_pre_ping=True,
+            connect_args={"connect_timeout": 3}
+        )
+        # Test the connection
+        with engine.connect() as conn:
+            logger.info("Successfully connected to PostgreSQL database!")
+    else:
+        logger.info("No PostgreSQL DATABASE_URL found. Initializing local SQLite database...")
+        engine = create_engine(
+            settings.DATABASE_URL, 
+            connect_args={"check_same_thread": False}
+        )
+        logger.info(f"SQLite database initialized at: {settings.DATABASE_URL}")
 except Exception as e:
     logger.warning(f"Failed to connect to PostgreSQL: {e}. Falling back to SQLite database.")
     engine = create_engine(

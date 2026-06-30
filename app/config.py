@@ -20,8 +20,11 @@ class Settings:
     PROJECT_NAME = "CloudClear AI"
     API_V1_STR = "/api"
     BASE_DIR = str(BASE_DIR)
-    raw_db_url = os.getenv("DATABASE_URL", "postgresql://postgres:saruu%401624@localhost:5432/cloudclear")
-    DATABASE_URL = raw_db_url.replace("postgres://", "postgresql://", 1) if raw_db_url else "postgresql://postgres:saruu%401624@localhost:5432/cloudclear"
+    raw_db_url = os.getenv("DATABASE_URL")
+    if raw_db_url:
+        DATABASE_URL = raw_db_url.replace("postgres://", "postgresql://", 1)
+    else:
+        DATABASE_URL = "sqlite:///" + str(Path(__file__).resolve().parent.parent / "cloudclear.db")
     SQLITE_FALLBACK_URL = "sqlite:///" + str(Path(__file__).resolve().parent.parent / "cloudclear.db")
     UPLOAD_FOLDER = str(UPLOAD_DIR)
     OUTPUT_FOLDER = str(OUTPUT_DIR)
