@@ -292,7 +292,7 @@ def get_db_status(db: Session = Depends(get_db)):
             host_db = auth_and_host[-1]
             masked_url = f"{parts[0]}://*****@{host_db}"
         except Exception:
-            masked_url = "postgresql://*****@localhost:5432/cloudclear"
+            masked_url = "postgresql://*****@database_host/cloudclear"
         
     is_connected = False
     error_msg = None
